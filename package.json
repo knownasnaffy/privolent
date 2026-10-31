@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "relay": "node relay/server.js",
+    "test:relay": "node relay/test.js"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",

@@ -43,16 +43,16 @@ A secure, offline-first daily loan collection system with encrypted SQLite deskt
   - [x] Build Collector Accounts management UI.
   - [x] Verify `pnpm build` and frontend tests pass and commit.
 
-- [ ] **Milestone 5: Thin Online Relay Service**
-  - [ ] Implement lightweight online relay server (`relay/`):
+- [x] **Milestone 5: Thin Online Relay Service**
+  - [x] Implement lightweight online relay server (`relay/`):
     - `POST /api/inbox` for collector submissions (idempotent by payment UUID, server sets `received_at`).
     - `GET /api/inbox/pending` for admin to pull pending collections.
     - `POST /api/inbox/ack` to acknowledge and archive processed submissions.
     - `POST /api/outbox/snapshot` for admin to publish read-only customer cards and 7-day lookaheads.
     - `GET /api/outbox/snapshot` for collectors to fetch latest snapshot.
     - Collector authentication endpoint (`POST /api/collector/login`).
-  - [ ] Write automated tests for relay inbox, outbox, idempotency, and retention.
-  - [ ] Verify relay tests pass and commit.
+  - [x] Write automated tests for relay inbox, outbox, idempotency, and retention.
+  - [x] Verify relay tests pass and commit.
 
 - [ ] **Milestone 6: Collector Mobile PWA**
   - [ ] Build mobile-first PWA for collectors (`collector-pwa/`):
