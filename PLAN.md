@@ -10,12 +10,12 @@ A secure, offline-first daily loan collection system with encrypted SQLite deskt
   - [x] Implement unit test suite verifying the exact worked example in Product Spec v1 (Day 1-2 paid, Day 3-4 missed = ₹40 fine, Day 5 paid ₹300, ₹20 fine waived, ₹20 fine paid) and remainder calculation (₹10,050 with ₹100 daily = 100 slots + ₹50 remainder).
   - [x] Ensure `cargo test` passes 100%.
 
-- [ ] **Milestone 2: Encrypted Database & Schema Migrations**
-  - [ ] Implement Argon2id key derivation from admin passphrase (`crypto.rs`).
-  - [ ] Implement SQLCipher connection wrapper with WAL mode and passphrase authentication (`db.rs`).
-  - [ ] Add versioned schema migrations (`migrations.rs`) via `rusqlite_migration` for all tables: `persons`, `loans`, `payments`, `fine_waivers`, `security_items`, `collectors`, `audit_log`, `processed_submissions`, `app_settings`.
-  - [ ] Write tests confirming: wrong passphrase cleanly fails to open DB, correct passphrase succeeds, migrations execute, and raw database file cannot be read without key.
-  - [ ] Verify `cargo test` passes and commit.
+- [x] **Milestone 2: Encrypted Database & Schema Migrations**
+  - [x] Implement Argon2id key derivation from admin passphrase (`crypto.rs`).
+  - [x] Implement SQLCipher connection wrapper with WAL mode and passphrase authentication (`db.rs`).
+  - [x] Add versioned schema migrations (`migrations.rs`) via `rusqlite_migration` for all tables: `persons`, `loans`, `payments`, `fine_waivers`, `security_items`, `collectors`, `audit_log`, `processed_submissions`, `app_settings`.
+  - [x] Write tests confirming: wrong passphrase cleanly fails to open DB, correct passphrase succeeds, migrations execute, and raw database file cannot be read without key.
+  - [x] Verify `cargo test` passes and commit.
 
 - [ ] **Milestone 3: Rust Tauri IPC Commands**
   - [ ] Implement typed commands for database lifecycle (`unlock_database`, `lock_database`, `is_database_unlocked`, `initialize_database`).
