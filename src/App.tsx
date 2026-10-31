@@ -9,6 +9,7 @@ import {
   Plus,
   RefreshCw,
   Coins,
+  Cloud,
 } from "lucide-react";
 import { api, DbStatus, LoanItem, Person, CollectorAccount, PaymentItem } from "@/lib/api";
 import { UnlockScreen } from "@/components/UnlockScreen";
@@ -73,6 +74,21 @@ export function App() {
     checkStatus();
   }, []);
 
+  const [syncingRelay, setSyncingRelay] = useState(false);
+
+  const handleSyncRelay = async () => {
+    setSyncingRelay(true);
+    try {
+      const res = await api.syncWithRelay();
+      alert(`Relay Sync Complete!\n• Pulled ${res.pulled_count} submissions from inbox\n• Acknowledged ${res.acknowledged_count} items\n• Published ${res.published_loans_count} active loans snapshot to outbox`);
+      await refreshAllData();
+    } catch (err: unknown) {
+      alert(typeof err === "string" ? err : "Failed to sync with relay. Ensure relay server is running.");
+    } finally {
+      setSyncingRelay(false);
+    }
+  };
+
   const handleLock = async () => {
     try {
       await api.lockDatabase();
@@ -123,6 +139,17 @@ export function App() {
               size="sm"
             >
               <Plus className="size-4 mr-1" /> New Loan
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSyncRelay}
+              disabled={syncingRelay}
+              className="border-teal-200 text-teal-800 hover:bg-teal-50 cursor-pointer"
+              title="Pull collector submissions from relay & publish outbox snapshot"
+            >
+              <Cloud className={`size-3.5 mr-1 ${syncingRelay ? "animate-spin" : ""}`} />
+              {syncingRelay ? "Syncing..." : "Sync Relay"}
             </Button>
             <Button
               variant="outline"

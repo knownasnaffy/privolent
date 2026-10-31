@@ -65,16 +65,16 @@ A secure, offline-first daily loan collection system with encrypted SQLite deskt
   - [x] Add tests for PWA offline queue and payload generation.
   - [x] Verify PWA build and tests pass and commit.
 
-- [ ] **Milestone 7: Relay Sync Integration in Desktop App**
-  - [ ] Implement Rust relay sync client in Tauri backend:
+- [x] **Milestone 7: Relay Sync Integration in Desktop App**
+  - [x] Implement Rust relay sync client in Tauri backend:
     - Pull pending submissions from relay inbox.
     - Insert submissions into SQLite in a single transaction (checking idempotency on UUID).
     - Confirm/ack with relay only after local transaction commits.
     - Flag submissions where `received_at - collected_at > 1 day`.
     - Automatically publish fresh snapshot to relay outbox upon unlock and after mutations.
-  - [ ] Add manual sync button and sync status indicator in Admin UI.
-  - [ ] Write integration test verifying the pull-ack-delete cycle and snapshot publishing.
-  - [ ] Verify tests pass and commit.
+  - [x] Add manual sync button and sync status indicator in Admin UI.
+  - [x] Write integration test verifying the pull-ack-delete cycle and snapshot publishing.
+  - [x] Verify tests pass and commit.
 
 - [ ] **Milestone 8: Safety, Export/Import, Documentation & Verification**
   - [ ] Implement encrypted database backup and export/import commands.

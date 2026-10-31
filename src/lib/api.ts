@@ -192,6 +192,13 @@ export interface CollectorAccount {
   created_at: string;
 }
 
+export interface SyncResult {
+  pulled_count: number;
+  acknowledged_count: number;
+  published_loans_count: number;
+  published_at: string;
+}
+
 export const api = {
   getDbStatus: () => invoke<DbStatus>("get_db_status"),
   unlockDatabase: (passphrase: string) =>
@@ -259,4 +266,8 @@ export const api = {
     invoke<string>("create_collector", { username }),
   toggleCollectorStatus: (collectorId: string, active: boolean) =>
     invoke<void>("toggle_collector_status", { collectorId, active }),
+
+  // Relay Sync
+  syncWithRelay: (relayUrl?: string, adminSecret?: string) =>
+    invoke<SyncResult>("sync_with_relay", { relayUrl, adminSecret }),
 };

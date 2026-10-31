@@ -1192,6 +1192,19 @@ pub fn toggle_collector_status(
         .map_err(|e| e.to_string())
 }
 
+// ---------------- Relay Synchronization ----------------
+
+#[tauri::command]
+pub async fn sync_with_relay(
+    state: State<'_, DbState>,
+    relay_url: Option<String>,
+    admin_secret: Option<String>,
+) -> Result<crate::relay_client::SyncResult, String> {
+    let url = relay_url.unwrap_or_else(|| "http://localhost:3001".to_string());
+    let secret = admin_secret.unwrap_or_else(|| "admin_relay_secret_2026".to_string());
+    crate::relay_client::sync_relay(&state.conn, &url, &secret).await
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

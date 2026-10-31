@@ -3,6 +3,7 @@ pub mod crypto;
 pub mod db;
 pub mod engine;
 pub mod migrations;
+pub mod relay_client;
 
 use db::DbState;
 use tauri::Manager;
@@ -52,6 +53,8 @@ pub fn run() {
             commands::create_collector,
             commands::list_collectors,
             commands::toggle_collector_status,
+            // Relay Sync
+            commands::sync_with_relay,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
