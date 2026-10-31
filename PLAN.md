@@ -17,19 +17,19 @@ A secure, offline-first daily loan collection system with encrypted SQLite deskt
   - [x] Write tests confirming: wrong passphrase cleanly fails to open DB, correct passphrase succeeds, migrations execute, and raw database file cannot be read without key.
   - [x] Verify `cargo test` passes and commit.
 
-- [ ] **Milestone 3: Rust Tauri IPC Commands**
-  - [ ] Implement typed commands for database lifecycle (`unlock_database`, `lock_database`, `is_database_unlocked`, `initialize_database`).
-  - [ ] Implement person commands (`create_person`, `get_persons`, `search_persons`, `update_person`).
-  - [ ] Implement loan commands (`preview_loan`, `create_loan`, `get_loans`, `get_loan_detail` with live derived state).
-  - [ ] Implement security items commands (`create_security_item`, `get_security_items`, `mark_security_item_returned`).
-  - [ ] Implement direct admin collection (`record_admin_payment` with UUID idempotency).
-  - [ ] Implement verification queue commands (`get_pending_verifications`, `verify_payment`, `reject_payment` with mandatory reason & audit logging).
-  - [ ] Implement fine waiver command (`create_fine_waiver` with mandatory reason & audit logging).
-  - [ ] Implement profit report command (`get_profit_report` splitting interest profit and fine profit by date range).
-  - [ ] Implement collector management commands (`create_collector`, `list_collectors`, `toggle_collector_status`).
-  - [ ] Register all commands in `tauri::generate_handler!`.
-  - [ ] Write integration tests for command logic and state mutations.
-  - [ ] Verify `cargo test` passes and commit.
+- [x] **Milestone 3: Rust Tauri IPC Commands**
+  - [x] Implement typed commands for database lifecycle (`unlock_database`, `lock_database`, `is_database_unlocked`, `initialize_database`).
+  - [x] Implement person commands (`create_person`, `get_persons`, `search_persons`, `update_person`).
+  - [x] Implement loan commands (`preview_loan`, `create_loan`, `get_loans`, `get_loan_detail` with live derived state).
+  - [x] Implement security items commands (`create_security_item`, `get_security_items`, `mark_security_item_returned`).
+  - [x] Implement direct admin collection (`record_admin_payment` with UUID idempotency).
+  - [x] Implement verification queue commands (`get_pending_verifications`, `verify_payment`, `reject_payment` with mandatory reason & audit logging).
+  - [x] Implement fine waiver command (`create_fine_waiver` with mandatory reason & audit logging).
+  - [x] Implement profit report command (`get_profit_report` splitting interest profit and fine profit by date range).
+  - [x] Implement collector management commands (`create_collector`, `list_collectors`, `toggle_collector_status`).
+  - [x] Register all commands in `tauri::generate_handler!`.
+  - [x] Write integration tests for command logic and state mutations.
+  - [x] Verify `cargo test` passes and commit.
 
 - [ ] **Milestone 4: Admin Desktop Frontend (Tailwind + shadcn/ui)**
   - [ ] Setup Tailwind CSS & shadcn components in Vite React app.
