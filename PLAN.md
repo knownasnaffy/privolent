@@ -31,17 +31,17 @@ A secure, offline-first daily loan collection system with encrypted SQLite deskt
   - [x] Write integration tests for command logic and state mutations.
   - [x] Verify `cargo test` passes and commit.
 
-- [ ] **Milestone 4: Admin Desktop Frontend (Tailwind + shadcn/ui)**
-  - [ ] Setup Tailwind CSS & shadcn components in Vite React app.
-  - [ ] Build Passphrase Unlock & Initial Setup screen.
-  - [ ] Build Application Shell with navigation: Dashboard, Loans, Customers, Verification Queue, Profit Report, Collectors, Settings.
-  - [ ] Build Loan Creation view with interactive Handover Preview and Remainder Notice banner.
-  - [ ] Build Customers & Guarantors directory with Aadhaar, phone, and linked loans.
-  - [ ] Build Loan Detail view with 7-day lookahead calendar, payment history, security items, direct collection modal, and fine waiver modal.
-  - [ ] Build Verification Queue with 1-click verify and reject dialogs (recording reasons).
-  - [ ] Build Profit Report screen with date range picker and interest vs fine profit metrics.
-  - [ ] Build Collector Accounts management UI.
-  - [ ] Verify `pnpm build` and frontend tests pass and commit.
+- [x] **Milestone 4: Admin Desktop Frontend (Tailwind + shadcn/ui)**
+  - [x] Setup Tailwind CSS & shadcn components in Vite React app.
+  - [x] Build Passphrase Unlock & Initial Setup screen.
+  - [x] Build Application Shell with navigation: Dashboard, Loans, Customers, Verification Queue, Profit Report, Collectors, Settings.
+  - [x] Build Loan Creation view with interactive Handover Preview and Remainder Notice banner.
+  - [x] Build Customers & Guarantors directory with Aadhaar, phone, and linked loans.
+  - [x] Build Loan Detail view with 7-day lookahead calendar, payment history, security items, direct collection modal, and fine waiver modal.
+  - [x] Build Verification Queue with 1-click verify and reject dialogs (recording reasons).
+  - [x] Build Profit Report screen with date range picker and interest vs fine profit metrics.
+  - [x] Build Collector Accounts management UI.
+  - [x] Verify `pnpm build` and frontend tests pass and commit.
 
 - [ ] **Milestone 5: Thin Online Relay Service**
   - [ ] Implement lightweight online relay server (`relay/`):
