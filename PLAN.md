@@ -54,16 +54,16 @@ A secure, offline-first daily loan collection system with encrypted SQLite deskt
   - [x] Write automated tests for relay inbox, outbox, idempotency, and retention.
   - [x] Verify relay tests pass and commit.
 
-- [ ] **Milestone 6: Collector Mobile PWA**
-  - [ ] Build mobile-first PWA for collectors (`collector-pwa/`):
+- [x] **Milestone 6: Collector Mobile PWA**
+  - [x] Build mobile-first PWA for collectors (`collector-pwa/`):
     - Collector login.
     - Customer search cards (photo, name, locality, masked phone, assigned collector filter).
     - Today's amount due card (principal due and fine due).
     - Fast collection form (< 30 seconds): principal paid, fine paid, mode (Cash/Online), offline-ready submit.
     - Offline queue with IndexedDB/localStorage and auto-sync when back online.
     - "Last refreshed" indicator and "Stale since <date>" banner if snapshot is out of date.
-  - [ ] Add tests for PWA offline queue and payload generation.
-  - [ ] Verify PWA build and tests pass and commit.
+  - [x] Add tests for PWA offline queue and payload generation.
+  - [x] Verify PWA build and tests pass and commit.
 
 - [ ] **Milestone 7: Relay Sync Integration in Desktop App**
   - [ ] Implement Rust relay sync client in Tauri backend:

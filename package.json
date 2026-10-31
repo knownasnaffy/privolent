@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "relay": "node relay/server.js",
-    "test:relay": "node relay/test.js"
+    "test:relay": "node relay/test.js",
+    "test:pwa": "node collector-pwa/test.js"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Loan Collector — Field PWA</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0f766e">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      line-height: 1.4;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: #0f766e;
+      color: white;
+      padding: 14px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .title { font-size: 17px; font-weight: 700; }
+    .badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-online { background: #10b981; color: white; }
+    .badge-offline { background: #ef4444; color: white; }
+    .search-box {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      background: white;
+      color: #0f172a;
+      outline: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .banner {
+      padding: 10px 16px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .banner-stale {
+      background: #fef3c7;
+      color: #92400e;
+      border-bottom: 1px solid #fde68a;
+    }
+    .banner-offline {
+      background: #fee2e2;
+      color: #991b1b;
+      border-bottom: 1px solid #fecaca;
+    }
+    .container { padding: 12px 16px; }
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+    }
+    .filter-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: #475569;
+      cursor: pointer;
+    }
+    .filter-btn.active {
+      background: #0f766e;
+      color: white;
+      border-color: #0f766e;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .customer-name { font-size: 16px; font-weight: 700; color: #0f172a; }
+    .locality { font-size: 12px; color: #64748b; }
+    .phone { font-size: 12px; font-family: monospace; color: #475569; }
+    .due-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 10px 0;
+      background: #f8fafc;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .due-col { display: flex; flex-direction: column; }
+    .due-label { font-size: 11px; color: #64748b; font-weight: 500; }
+    .due-val { font-size: 16px; font-weight: 700; }
+    .val-principal { color: #0f766e; }
+    .val-fine { color: #b45309; }
+    .val-prepaid { color: #059669; font-size: 13px; font-weight: 700; }
+    .btn-collect {
+      width: 100%;
+      background: #0f766e;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-collect:active { background: #115e59; }
+    
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      z-index: 50;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-content {
+      background: white;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 16px 16px 0 0;
+      padding: 20px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+      animation: slideUp 0.2s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .modal-desc { font-size: 12px; color: #64748b; margin-bottom: 16px; }
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 4px; }
+    .form-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+    }
+    .btn-row { display: flex; gap: 8px; margin-top: 18px; }
+    .btn-cancel {
+      flex: 1;
+      padding: 12px;
+      background: #e2e8f0;
+      color: #334155;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-submit {
+      flex: 2;
+      padding: 12px;
+      background: #0f766e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    /* Login screen */
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      padding: 24px;
+      text-align: center;
+    }
+    .login-card {
+      background: white;
+      width: 100%;
+      max-width: 360px;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top App Bar -->
+  <header class="header">
+    <div class="header-top">
+      <div class="title" id="appHeaderTitle">Field Collector</div>
+      <div id="netStatus" class="badge badge-online">Online</div>
+    </div>
+    <input type="text" id="searchInput" class="search-box" placeholder="Search customer, locality, last 4 digits...">
+  </header>
+
+  <!-- Notification Banners -->
+  <div id="staleBanner" class="banner banner-stale" style="display: none;">
+    ⚠️ <span id="staleText">Data may be out of date.</span>
+  </div>
+  <div id="offlineBanner" class="banner banner-offline" style="display: none;">
+    📡 You are offline. Collections are queued locally and will sync when reconnected.
+  </div>
+
+  <!-- Main View -->
+  <div id="mainView" class="container">
+    <div class="filters">
+      <button class="filter-btn active" id="filterAll" onclick="setFilter('all')">All Loans</button>
+      <button class="filter-btn" id="filterMine" onclick="setFilter('mine')">My Assigned</button>
+      <button class="filter-btn" onclick="syncPendingSubmissions()">Sync (<span id="queuedCount">0</span>)</button>
+    </div>
+
+    <div id="cardsList">
+      <!-- Injected dynamically -->
+    </div>
+  </div>
+
+  <!-- Login Modal / Screen (shown if not logged in) -->
+  <div id="loginScreen" class="login-container" style="display: none;">
+    <div class="login-card">
+      <h2 style="font-size: 20px; font-weight: 800; color: #0f766e; margin-bottom: 8px;">Loan Collector</h2>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 20px;">Field Agent Mobile PWA</p>
+      
+      <div class="form-group" style="text-align: left;">
+        <label class="form-label">Collector Username</label>
+        <input type="text" id="loginUsername" class="form-input" placeholder="e.g. sukhdev_singh">
+      </div>
+      <button class="btn-collect" onclick="handleLogin()" style="margin-top: 10px;">Log In to Field App</button>
+    </div>
+  </div>
+
+  <!-- Collect Payment Modal -->
+  <div id="collectModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="modal-title" id="modalCustomerName">Collect Payment</h3>
+      <p class="modal-desc" id="modalLocality">Enter principal and fine amounts received.</p>
+
+      <form id="collectForm" onsubmit="handleCollectSubmit(event)">
+        <input type="hidden" id="modalLoanId">
+
+        <div class="form-group">
+          <label class="form-label">Principal Amount (₹) *</label>
+          <input type="number" id="modalPrincipal" class="form-input" required min="0" step="10">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Fine Amount (₹)</label>
+          <input type="number" id="modalFine" class="form-input" min="0" step="5">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Payment Mode</label>
+          <select id="modalMode" class="form-input">
+            <option value="cash">Cash Received</option>
+            <option value="online">Online / UPI Transfer</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Notes / Reference</label>
+          <input type="text" id="modalReference" class="form-input" placeholder="Optional notes">
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn-cancel" onclick="closeCollectModal()">Cancel</button>
+          <button type="submit" class="btn-submit">Record Collection</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

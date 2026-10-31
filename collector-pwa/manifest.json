@@ -1,0 +1,9 @@
+{
+  "name": "Loan Collector — Field PWA",
+  "short_name": "Collector",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f766e",
+  "description": "Offline-ready field collection app for daily loans"
+}
