@@ -1,5 +1,11 @@
 // Loan Collector Thin Online Relay Service (ADR-001)
 import http from "node:http";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PWA_DIR = path.resolve(__dirname, "../collector-pwa");
 
 export class RelayServer {
   constructor(options = {}) {
@@ -222,6 +228,32 @@ export class RelayServer {
           });
         }
         return this.sendJson(res, 200, this.latestSnapshot);
+      }
+
+      // 7. Serve Collector PWA statically for convenience
+      if (pathname === "/collector" || pathname.startsWith("/collector/")) {
+        let subpath = pathname.replace(/^\/collector\/?/, "");
+        if (!subpath || subpath === "") {
+          subpath = "index.html";
+        }
+        const filePath = path.join(PWA_DIR, subpath);
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+          const ext = path.extname(filePath);
+          const mimeTypes = {
+            ".html": "text/html",
+            ".js": "application/javascript",
+            ".json": "application/json",
+            ".css": "text/css",
+            ".png": "image/png",
+            ".svg": "image/svg+xml",
+          };
+          const contentType = mimeTypes[ext] || "text/plain";
+          res.writeHead(200, {
+            "Content-Type": contentType,
+            "Access-Control-Allow-Origin": "*",
+          });
+          return res.end(fs.readFileSync(filePath));
+        }
       }
 
       // Health check endpoint

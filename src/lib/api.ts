@@ -199,6 +199,19 @@ export interface SyncResult {
   published_at: string;
 }
 
+export interface BackupMetadata {
+  exported_at: string;
+  db_size_bytes: number;
+  salt_size_bytes: number;
+  archive_size_bytes: number;
+}
+
+export interface ImportSummary {
+  imported_loans_count: number;
+  imported_persons_count: number;
+  opening_payments_count: number;
+}
+
 export const api = {
   getDbStatus: () => invoke<DbStatus>("get_db_status"),
   unlockDatabase: (passphrase: string) =>
@@ -270,4 +283,14 @@ export const api = {
   // Relay Sync
   syncWithRelay: (relayUrl?: string, adminSecret?: string) =>
     invoke<SyncResult>("sync_with_relay", { relayUrl, adminSecret }),
+
+  // Backup & Import
+  exportEncryptedBackup: (destinationPath: string) =>
+    invoke<BackupMetadata>("export_encrypted_backup_command", { destinationPath }),
+  restoreEncryptedBackup: (backupFilePath: string) =>
+    invoke<void>("restore_encrypted_backup_command", { backupFilePath }),
+  exportDecryptedJson: () =>
+    invoke<string>("export_decrypted_json_command"),
+  importLegacyLoans: (csvContent: string) =>
+    invoke<ImportSummary>("import_legacy_loans_command", { csvContent }),
 };

@@ -10,7 +10,9 @@
     "tauri": "tauri",
     "relay": "node relay/server.js",
     "test:relay": "node relay/test.js",
-    "test:pwa": "node collector-pwa/test.js"
+    "test:pwa": "node collector-pwa/test.js",
+    "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml",
+    "test": "pnpm test:rust && pnpm test:relay && pnpm test:pwa"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",

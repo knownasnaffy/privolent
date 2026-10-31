@@ -1,3 +1,4 @@
+pub mod backup;
 pub mod commands;
 pub mod crypto;
 pub mod db;
@@ -55,6 +56,11 @@ pub fn run() {
             commands::toggle_collector_status,
             // Relay Sync
             commands::sync_with_relay,
+            // Backup & Legacy Import
+            commands::export_encrypted_backup_command,
+            commands::restore_encrypted_backup_command,
+            commands::export_decrypted_json_command,
+            commands::import_legacy_loans_command,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

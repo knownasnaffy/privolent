@@ -76,10 +76,11 @@ A secure, offline-first daily loan collection system with encrypted SQLite deskt
   - [x] Write integration test verifying the pull-ack-delete cycle and snapshot publishing.
   - [x] Verify tests pass and commit.
 
-- [ ] **Milestone 8: Safety, Export/Import, Documentation & Verification**
-  - [ ] Implement encrypted database backup and export/import commands.
-  - [ ] Implement Excel/CSV import for the ~40 legacy loans with opening balances.
-  - [ ] Run full end-to-end verification across desktop app, relay, and collector PWA.
-  - [ ] Update `README.md` with complete installation, build, testing, and running instructions.
-  - [ ] Verify all tests, lints, and builds succeed from a clean state.
-  - [ ] Final commit and summary.
+- [x] **Milestone 8: Safety, Export/Import, Documentation & Verification**
+  - [x] Implement encrypted database backup and export/restore commands (.encbak zip format).
+  - [x] Implement Excel/CSV import for the ~40 legacy loans with opening balances.
+  - [x] Implement plaintext decrypted JSON export for owner review.
+  - [x] Run full end-to-end verification across desktop app, relay, and collector PWA.
+  - [x] Update `README.md` with complete installation, build, testing, and running instructions.
+  - [x] Verify all tests, lints, and builds succeed from a clean state.
+  - [x] Final commit and summary.

@@ -1205,6 +1205,52 @@ pub async fn sync_with_relay(
     crate::relay_client::sync_relay(&state.conn, &url, &secret).await
 }
 
+// ---------------- Backup & Legacy Import ----------------
+
+#[tauri::command]
+pub fn export_encrypted_backup_command(
+    state: State<'_, DbState>,
+    destination_path: String,
+) -> Result<crate::backup::BackupMetadata, String> {
+    crate::backup::export_encrypted_backup(
+        &state.db_path,
+        &state.salt_path,
+        std::path::Path::new(&destination_path),
+    )
+    .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn restore_encrypted_backup_command(
+    state: State<'_, DbState>,
+    backup_file_path: String,
+) -> Result<(), String> {
+    state.lock();
+    crate::backup::restore_encrypted_backup(
+        std::path::Path::new(&backup_file_path),
+        &state.db_path,
+        &state.salt_path,
+    )
+    .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn export_decrypted_json_command(state: State<'_, DbState>) -> Result<String, String> {
+    state
+        .with_conn(|conn| crate::backup::export_decrypted_json(conn))
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn import_legacy_loans_command(
+    state: State<'_, DbState>,
+    csv_content: String,
+) -> Result<crate::backup::ImportSummary, String> {
+    state
+        .with_conn_mut(|conn| crate::backup::import_legacy_loans_csv(conn, &csv_content).map_err(DbError::Crypto))
+        .map_err(|e| e.to_string())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

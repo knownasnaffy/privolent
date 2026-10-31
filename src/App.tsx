@@ -10,6 +10,7 @@ import {
   RefreshCw,
   Coins,
   Cloud,
+  Settings,
 } from "lucide-react";
 import { api, DbStatus, LoanItem, Person, CollectorAccount, PaymentItem } from "@/lib/api";
 import { UnlockScreen } from "@/components/UnlockScreen";
@@ -20,6 +21,7 @@ import { ProfitReportView } from "@/components/ProfitReportView";
 import { CollectorsView } from "@/components/CollectorsView";
 import { LoanCreationModal } from "@/components/LoanCreationModal";
 import { LoanDetailModal } from "@/components/LoanDetailModal";
+import { SettingsModal } from "@/components/SettingsModal";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 
@@ -36,6 +38,7 @@ export function App() {
 
   const [createLoanOpen, setCreateLoanOpen] = useState(false);
   const [selectedLoanId, setSelectedLoanId] = useState<string | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const checkStatus = async () => {
@@ -160,6 +163,15 @@ export function App() {
               className="cursor-pointer"
             >
               <RefreshCw className={`size-3.5 ${loading ? "animate-spin" : ""}`} />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSettingsOpen(true)}
+              className="text-slate-700 hover:text-slate-900 cursor-pointer"
+              title="System Settings, Encrypted Backup, Export & Legacy CSV Import"
+            >
+              <Settings className="size-3.5 mr-1 text-teal-700" /> Settings
             </Button>
             <Button
               variant="ghost"
@@ -296,6 +308,12 @@ export function App() {
         }}
         loanId={selectedLoanId}
         onRefresh={refreshAllData}
+      />
+
+      <SettingsModal
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        onRefreshAll={refreshAllData}
       />
     </div>
   );
