@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { AlertTriangle, Calculator, CheckCircle2 } from "lucide-react";
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "./ui/Dialog";
 import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
 import { Badge } from "./ui/Badge";
+import { Combobox } from "./ui/Combobox";
 import { api, Person, CollectorAccount, LoanPreview } from "@/lib/api";
 import { formatCurrency } from "@/lib/utils";
 
@@ -33,6 +34,50 @@ export const LoanCreationModal: React.FC<LoanCreationModalProps> = ({
     new Date().toISOString().split("T")[0]
   );
   const [assignedCollectorId, setAssignedCollectorId] = useState<string>("");
+
+  const customerOptions = useMemo(
+    () =>
+      persons.map((p) => ({
+        value: p.id,
+        label: `${p.name} (${p.phone})`,
+        keywords: [p.name, p.phone],
+      })),
+    [persons]
+  );
+
+  const guarantorOptions = useMemo(
+    () => [
+      { value: "", label: "None" },
+      ...persons
+        .filter((p) => p.id !== customerId)
+        .map((p) => ({
+          value: p.id,
+          label: `${p.name} (${p.phone})`,
+          keywords: [p.name, p.phone],
+        })),
+    ],
+    [persons, customerId]
+  );
+
+  const collectorOptions = useMemo(
+    () => [
+      { value: "", label: "Admin / Unassigned" },
+      ...collectors
+        .filter((c) => c.active)
+        .map((c) => ({
+          value: c.id,
+          label: c.username,
+        })),
+    ],
+    [collectors]
+  );
+
+  const handleCustomerChange = (id: string) => {
+    setCustomerId(id);
+    if (guarantorId === id) {
+      setGuarantorId("");
+    }
+  };
 
   const [preview, setPreview] = useState<LoanPreview | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -90,7 +135,7 @@ export const LoanCreationModal: React.FC<LoanCreationModalProps> = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} className="max-w-2xl">
       <DialogHeader>
         <DialogTitle>Disburse New Loan</DialogTitle>
         <DialogDescription>
@@ -108,37 +153,26 @@ export const LoanCreationModal: React.FC<LoanCreationModalProps> = ({
         <div className="grid grid-cols-2 gap-3">
           <div className="flex flex-col gap-1">
             <label className="text-xs font-medium text-slate-700">Customer *</label>
-            <select
+            <Combobox
+              options={customerOptions}
               value={customerId}
-              onChange={(e) => setCustomerId(e.target.value)}
-              className="flex h-9 w-full rounded-md border border-slate-300 bg-white px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-teal-700"
-              required
-            >
-              <option value="">Select customer...</option>
-              {persons.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name} ({p.phone})
-                </option>
-              ))}
-            </select>
+              onValueChange={handleCustomerChange}
+              placeholder="Select customer..."
+              searchPlaceholder="Search customer..."
+              emptyText="No customer found."
+            />
           </div>
 
           <div className="flex flex-col gap-1">
             <label className="text-xs font-medium text-slate-700">Guarantor (Optional)</label>
-            <select
+            <Combobox
+              options={guarantorOptions}
               value={guarantorId}
-              onChange={(e) => setGuarantorId(e.target.value)}
-              className="flex h-9 w-full rounded-md border border-slate-300 bg-white px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-teal-700"
-            >
-              <option value="">None</option>
-              {persons
-                .filter((p) => p.id !== customerId)
-                .map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name} ({p.phone})
-                  </option>
-                ))}
-            </select>
+              onValueChange={setGuarantorId}
+              placeholder="None"
+              searchPlaceholder="Search guarantor..."
+              emptyText="No guarantor found."
+            />
           </div>
         </div>
 
@@ -229,20 +263,14 @@ export const LoanCreationModal: React.FC<LoanCreationModalProps> = ({
 
           <div className="flex flex-col gap-1">
             <label className="text-xs font-medium text-slate-700">Assign Collector</label>
-            <select
+            <Combobox
+              options={collectorOptions}
               value={assignedCollectorId}
-              onChange={(e) => setAssignedCollectorId(e.target.value)}
-              className="flex h-9 w-full rounded-md border border-slate-300 bg-white px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-teal-700"
-            >
-              <option value="">Admin / Unassigned</option>
-              {collectors
-                .filter((c) => c.active)
-                .map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.username}
-                  </option>
-                ))}
-            </select>
+              onValueChange={setAssignedCollectorId}
+              placeholder="Admin / Unassigned"
+              searchPlaceholder="Search collector..."
+              emptyText="No collector found."
+            />
           </div>
         </div>
 
