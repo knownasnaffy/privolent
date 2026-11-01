@@ -1,0 +1,128 @@
+# Triggered automatically whenever a version tag (e.g. v0.1.0) is pushed to
+# the repository — which happens at the end of release-bump.yml.
+#
+# Builds the Tauri desktop app for:
+#   • Linux  x64  (ubuntu-22.04)
+#   • Windows x64 (windows-latest)
+#
+# Then creates a GitHub Release linked to the tag, attaches all platform
+# binaries, and uses the relevant CHANGELOG.md section as the release body.
+
+name: Release Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write   # needed to create the GitHub Release and upload assets
+
+jobs:
+  # ── Pre-job: extract the changelog body once, share it via job output ──────────
+  changelog:
+    runs-on: ubuntu-22.04
+    outputs:
+      body: ${{ steps.extract.outputs.body }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract changelog body for this tag
+        id: extract
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"   # e.g. v0.1.1
+          VERSION="${TAG#v}"         # e.g. 0.1.1
+
+          BODY=""
+          if [ -f CHANGELOG.md ]; then
+            # Grab the block that starts with "## [X.Y.Z]" (or "## X.Y.Z")
+            # and ends just before the next "## " heading.
+            BODY=$(awk \
+              "/^## \[?${VERSION}\]?/ { found=1; next }
+               found && /^## / { exit }
+               found { print }" \
+              CHANGELOG.md | sed -e 's/^[[:space:]]*$//' | awk 'NF{p=1} p')
+          fi
+
+          if [ -z "$BODY" ]; then
+            BODY="Release ${TAG}"
+          fi
+
+          # Use the GitHub multiline output trick to preserve newlines
+          {
+            echo "body<<CHANGELOG_EOF"
+            echo "$BODY"
+            echo "CHANGELOG_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+  # ── Build job: runs in parallel across platforms ───────────────────────────────
+  build-tauri:
+    needs: changelog
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ubuntu-22.04
+            label: linux-x64
+          - platform: windows-latest
+            label: windows-x64
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      # ── 1. Checkout ─────────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Linux system dependencies ────────────────────────────────────────────
+      - name: Install Linux system dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            xdg-utils
+
+      # ── 3. Node / pnpm setup ────────────────────────────────────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      # ── 4. Rust toolchain + cache ────────────────────────────────────────────────
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust build artifacts
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      # ── 5. Install frontend dependencies ────────────────────────────────────────
+      - name: Install frontend dependencies
+        run: pnpm install
+
+      # ── 6. Build and publish via tauri-action ───────────────────────────────────
+      - name: Build and publish Tauri app
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # The tag was already pushed by release-bump.yml; tauri-action will
+          # locate the existing release (or create one) for this exact tag.
+          tagName: ${{ github.ref_name }}
+          releaseName: 'Privolent ${{ github.ref_name }}'
+          releaseBody: ${{ needs.changelog.outputs.body }}
+          releaseDraft: false
+          prerelease: false
