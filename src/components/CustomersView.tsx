@@ -112,8 +112,8 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
                 <div>
                   <h4 className="font-semibold text-slate-900 text-base">{person.name}</h4>
                   {person.occupation && (
-                    <span className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                      <Briefcase className="size-3" /> {person.occupation}
+                    <span className="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
+                      <Briefcase className="size-3.5" /> {person.occupation}
                     </span>
                   )}
                 </div>
