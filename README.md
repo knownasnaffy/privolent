@@ -1,3 +1,5 @@
+<img width="1774" height="887" alt="Untitled Design" src="https://github.com/user-attachments/assets/7c507c70-cdf8-4e90-bf34-d23dbbfd4604" />
+
 # Privolent
 
 A self-hosted daily loan collection system built for small lending operations. The owner runs an encrypted desktop app on their machine; field collectors use a lightweight mobile web app on their phones.
