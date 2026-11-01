@@ -74,7 +74,7 @@ export const CollectorsView: React.FC<CollectorsViewProps> = ({
                   <div className="size-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-sm">
                     {col.username.slice(0, 2).toUpperCase()}
                   </div>
-                  <div>
+                  <div className="-space-y-1">
                     <h4 className="font-semibold text-slate-900 text-base">{col.username}</h4>
                     <span className="text-xs text-slate-400">Created: {col.created_at.slice(0, 10)}</span>
                   </div>
