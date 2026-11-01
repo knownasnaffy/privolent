@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Extract changelog body for this tag
         id: extract
@@ -75,7 +75,7 @@ jobs:
     steps:
       # ── 1. Checkout ─────────────────────────────────────────────────────────────
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # ── 2. Linux system dependencies ────────────────────────────────────────────
       - name: Install Linux system dependencies
@@ -91,13 +91,14 @@ jobs:
 
       # ── 3. Node / pnpm setup ────────────────────────────────────────────────────
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 'lts/*'
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
         with:
+          version: latest
           run_install: false
 
       # ── 4. Rust toolchain + cache ────────────────────────────────────────────────

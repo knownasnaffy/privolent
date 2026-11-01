@@ -35,20 +35,21 @@ jobs:
     steps:
       # ── 1. Checkout with full history so conventional-changelog can read all commits ──
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # ── 2. Node / pnpm setup ──────────────────────────────────────────────────────
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 'lts/*'
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
         with:
+          version: latest
           run_install: false
 
       # ── 3. Compute next version ───────────────────────────────────────────────────
