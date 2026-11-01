@@ -90,16 +90,16 @@ jobs:
             xdg-utils
 
       # ── 3. Node / pnpm setup ────────────────────────────────────────────────────
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 'lts/*'
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
           version: latest
           run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 'lts/*'
 
       # ── 4. Rust toolchain + cache ────────────────────────────────────────────────
       - name: Install Rust stable
