@@ -147,7 +147,7 @@ export const LoansView: React.FC<LoansViewProps> = ({
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-xs text-slate-500 pt-1 border-t border-slate-100">
+              <div className="flex items-center justify-between text-xs text-slate-500 pt-3 border-t border-slate-100">
                 <span className="flex items-center gap-1">
                   <Calendar className="size-3 text-slate-400" /> Start: {loan.start_date}
                 </span>
