@@ -41,14 +41,6 @@ jobs:
             patchelf \
             xdg-utils
 
-      - name: Setup vcpkg and OpenSSL (Windows)
-        if: runner.os == 'Windows'
-        uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgGitCommitId: 5b4e3e3b3c3b53c3d55122b512a334130090263f
-          vcpkgDirectory: ${{ runner.temp }}/vcpkg
-
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
@@ -70,6 +62,12 @@ jobs:
 
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Install OpenSSL (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install openssl
+          vcpkg install openssl:x64-windows
 
       - name: Build and publish Tauri app
         uses: tauri-apps/tauri-action@action-v1.0.0
