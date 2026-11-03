@@ -28,7 +28,7 @@ jobs:
 
       - name: Read current commit
         id: commit
-        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+        run: echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
