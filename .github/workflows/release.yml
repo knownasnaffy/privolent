@@ -41,6 +41,14 @@ jobs:
             patchelf \
             xdg-utils
 
+      - name: Setup vcpkg and OpenSSL (Windows)
+        if: runner.os == 'Windows'
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: 5b4e3e3b3c3b53c3d55122b512a334130090263f
+          vcpkgDirectory: ${{ runner.temp }}/vcpkg
+
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
