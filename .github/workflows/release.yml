@@ -63,6 +63,12 @@ jobs:
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install OpenSSL (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install openssl
+          vcpkg install openssl:x64-windows
+
       - name: Build and publish Tauri app
         uses: tauri-apps/tauri-action@action-v1.0.0
         env:
